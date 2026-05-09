@@ -1,3 +1,5 @@
+# Authentication views for Student Performance Predictor
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import status
