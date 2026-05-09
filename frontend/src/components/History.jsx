@@ -10,7 +10,7 @@ function History() {
     const fetchHistory = async () => {
       try {
         const token = localStorage.getItem('token')
-        const response = await axios.get('http://localhost:8000/api/history/',
+        const response = await axios.get('http://164.92.211.68:8000/api/history/',
           { headers: { Authorization: `Token ${token}` } }
         )
         setHistory(response.data)

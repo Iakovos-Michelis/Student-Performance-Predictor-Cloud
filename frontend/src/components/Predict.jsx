@@ -13,7 +13,7 @@ function Predict() {
   const handlePredict = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.post('http://localhost:8000/api/predict/',
+      const response = await axios.post('http://164.92.211.68:8000/api/predict/',
         { math_score: mathScore, reading_score: readingScore, writing_score: writingScore },
         { headers: { Authorization: `Token ${token}` } }
       )
