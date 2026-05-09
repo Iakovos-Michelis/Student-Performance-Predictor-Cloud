@@ -9,8 +9,9 @@ function History() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
+        const token = localStorage.getItem('token')
         const response = await axios.get('http://localhost:8000/api/history/',
-          { withCredentials: true }
+          { headers: { Authorization: `Token ${token}` } }
         )
         setHistory(response.data)
       } catch (err) {

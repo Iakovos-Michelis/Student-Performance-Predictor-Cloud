@@ -12,9 +12,10 @@ function Predict() {
 
   const handlePredict = async () => {
     try {
+      const token = localStorage.getItem('token')
       const response = await axios.post('http://localhost:8000/api/predict/',
         { math_score: mathScore, reading_score: readingScore, writing_score: writingScore },
-        { withCredentials: true }
+        { headers: { Authorization: `Token ${token}` } }
       )
       setResult(response.data.result)
     } catch (err) {
@@ -23,7 +24,7 @@ function Predict() {
   }
 
   const handleLogout = async () => {
-    await axios.post('http://localhost:8000/api/logout/', {}, { withCredentials: true })
+    localStorage.removeItem('token')
     navigate('/login')
   }
 

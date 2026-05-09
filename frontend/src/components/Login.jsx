@@ -10,10 +10,10 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      await axios.post('http://localhost:8000/api/login/', 
-        { username, password },
-        { withCredentials: true }
+      const response = await axios.post('http://localhost:8000/api/login/', 
+        { username, password }
       )
+      localStorage.setItem('token', response.data.token)
       navigate('/predict')
     } catch (err) {
       setError('Invalid credentials')

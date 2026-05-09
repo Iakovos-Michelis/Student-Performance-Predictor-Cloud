@@ -10,11 +10,11 @@ function Register() {
 
   const handleRegister = async () => {
     try {
-      await axios.post('http://localhost:8000/api/register/', 
-        { username, password },
-        { withCredentials: true }
+      const response = await axios.post('http://localhost:8000/api/register/', 
+        { username, password }
       )
-      navigate('/login')
+      localStorage.setItem('token', response.data.token)
+      navigate('/predict')
     } catch (err) {
       setError('Username already exists')
     }

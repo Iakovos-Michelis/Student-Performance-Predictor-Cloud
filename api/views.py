@@ -1,11 +1,11 @@
 # Authentication views for Student Performance Predictor
-
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 import pickle
 import numpy as np
 import os
@@ -23,7 +23,8 @@ def register(request):
     if User.objects.filter(username=username).exists():
         return Response({'error': 'Username already exists'}, status=400)
     user = User.objects.create_user(username=username, password=password)
-    return Response({'message': 'User created successfully'})
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({'token': token.key})
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -32,14 +33,15 @@ def login_view(request):
     password = request.data.get('password')
     user = authenticate(request, username=username, password=password)
     if user:
-        login(request, user)
-        return Response({'message': 'Login successful'})
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})
     return Response({'error': 'Invalid credentials'}, status=400)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def logout_view(request):
-    logout(request)
+    if request.user.is_authenticated:
+        request.user.auth_token.delete()
     return Response({'message': 'Logged out successfully'})
 
 @api_view(['POST'])
@@ -65,7 +67,7 @@ def predict(request):
 def history(request):
     from .models import Prediction
     predictions = Prediction.objects.filter(user=request.user).order_by('-created_at')
-    data = [{'math_score': p.math_score, 'reading_score': p.reading_score, 
-              'writing_score': p.writing_score, 'result': p.result, 
+    data = [{'math_score': p.math_score, 'reading_score': p.reading_score,
+              'writing_score': p.writing_score, 'result': p.result,
               'created_at': p.created_at} for p in predictions]
     return Response(data)
