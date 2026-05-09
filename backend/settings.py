@@ -128,6 +128,7 @@ STATIC_URL = 'static/'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost",
     "http://localhost:5173",
+    "http://164.92.211.68",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
