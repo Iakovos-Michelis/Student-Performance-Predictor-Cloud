@@ -19,8 +19,6 @@ services:
       - db
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings
-    volumes:
-      - ./backend:/app
 
   frontend:
     build: ./frontend
@@ -30,11 +28,9 @@ services:
       - backend
 
   nginx:
-    image: nginx:alpine
+    build: ./nginx
     ports:
       - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - frontend
       - backend
